@@ -30,7 +30,7 @@
                             $('.form-group[name="password"]').addClass("has-error")
                         },
                         success: function(data, textStatus, jqXHR) {
-                            window.location.href = data;
+                            window.open(data, '_system');
                         },
                     });
 
