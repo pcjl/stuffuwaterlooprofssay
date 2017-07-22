@@ -46,7 +46,7 @@ def post_quote():
     LINE_SPACING = 30
 
     BACKGROUND = resource_path('assets/background.jpg')
-    FONT = resource_path('assets/PapyrusLETPlain.ttf')
+    FONT = resource_path('assets/Papyrus.ttf')
 
     password_hash = hashlib.sha256(
             str(request.form.get('password')).encode('utf-8')).hexdigest()
