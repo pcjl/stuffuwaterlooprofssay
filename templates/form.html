@@ -8,6 +8,8 @@
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -27,8 +29,8 @@
                         error: function(jqXHR) {
                             $('.form-group[name="password"]').addClass("has-error")
                         },
-                        success: function(jqXHR) {
-                            window.location.replace("https://google.com");
+                        success: function(data, textStatus, jqXHR) {
+                            window.location.href = data;
                         },
                     });
 
@@ -39,33 +41,42 @@
     </head>
     <body>
         <div class="container">
-            <a href="https://www.facebook.com/stuffuwaterlooprofssay/">
-                <h1>Stuff Uwaterloo Professors Say</h1>
-            </a>
+            <div class="page-header">
+                <a href="https://www.facebook.com/stuffuwaterlooprofssay/">
+                    <h1>Stuff Uwaterloo Professors Say</h1>
+                </a>
+            </div>
+            
             <form method="post" action="/">
-                <div class="form-group" name="quote">
-                    <label for="quote">Quote</label>
-                    <textarea class="form-control" required name="quote" placeholder="Quote"></textarea>
-                </div>
+                <fieldset>
+                    <div class="form-group" name="quote">
+                        <label for="quote">Quote</label>
+                        <textarea class="form-control" required name="quote" placeholder="Quote"></textarea>
+                    </div>
 
-                <div class="form-group" name="prof">
-                    <label for="prof">Professor</label>
-                    <input type="text" required class="form-control" name="prof" placeholder="Professor"/>
-                </div>
+                    <div class="form-group" name="prof">
+                        <label for="prof">Professor</label>
+                        <input type="text" required class="form-control" name="prof" placeholder="Professor"/>
+                    </div>
 
-                <div class="form-group" name="course">
-                    <label for="course">Course</label>
-                    <input type="text" required class="form-control" name="course" placeholder="Course"/>
-                </div>
+                    <div class="form-group" name="course">
+                        <label for="course">Course</label>
+                        <input type="text" required class="form-control" name="course" placeholder="Course"/>
+                    </div>
 
-                <div class="form-group" name="password">
-                    <label class="control-label" for="password">Password</label>
-                    <input type="password" required class="form-control" name="password" placeholder="Password"/>
-                </div>
+                    <div class="form-group" name="caption">
+                        <label for="caption">Caption</label>
+                        <input type="text" class="form-control" name="caption" placeholder="Caption (optional)"/>
+                    </div>
+                    <div class="form-group" name="password">
+                        <label class="control-label" for="password">Password</label>
+                        <input type="password" required class="form-control" name="password" placeholder="Password"/>
+                    </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </fieldset>
             </form>
         </div>
     </body>

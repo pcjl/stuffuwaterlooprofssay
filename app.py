@@ -28,13 +28,10 @@ def get_quote():
 def post_quote():
     # Constants
     PASSWORD_HASHES = [
-        '211f49701abb468c9c686b272a60e15a0b3449651d337f86fea275bcebf98a5d'
+        os.environ['PASSWORD_HASH']
     ]
 
-    config = {
-        'access_token': 'ACCESS_TOKEN',
-        'page_id': 'PAGE_ID'
-    }
+    ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 
     QUOTE_SIZE = 60
     SOURCE_SIZE = 40
@@ -60,6 +57,7 @@ def post_quote():
     quote = request.form.get('quote')
     professor = request.form.get('prof')
     course = request.form.get('course')
+    caption = request.form.get('caption')
 
     # Load resources
     image = Image.open(BACKGROUND)
@@ -105,13 +103,10 @@ def post_quote():
     # Save file
     image.save(OUTPUT, quality=95)
 
-    return 'Thanks!'
+    # return 'Thanks!'
 
-    graph = facebook.GraphAPI(access_token=config['access_token'])
-    response = graph.get_object('me/accounts')
-    page_access_token = None
-    for page in response['data']:
-        if page['id'] == config['page_id']:
-            page_access_token = page['access_token']
-    graph = facebook.GraphAPI(access_token=page_access_token)
-    graph.put_photo(image=open(OUTPUT, 'rb'))
+    graph = facebook.GraphAPI(access_token=ACCESS_TOKEN)
+    response = graph.put_photo(image=open(OUTPUT, 'rb'), message=caption)
+    return Response(
+            'https://facebook.com/{}'.format(response['post_id']),
+            200)
