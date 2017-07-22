@@ -103,8 +103,7 @@ def post_quote():
         fill='black')
 
     # Save file
-    filename = r'output/{}.jpg'.format(
-        datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+    filename = 'output.jpg'
     image.save(filename, quality=95)
 
     return 'Thanks!'
