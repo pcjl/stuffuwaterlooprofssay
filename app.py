@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, Response
 from PIL import Image, ImageDraw, ImageFont
-from datetime import datetime
 import facebook
 import hashlib
 import textwrap
@@ -47,6 +46,7 @@ def post_quote():
 
     BACKGROUND = resource_path('assets/background.jpg')
     FONT = resource_path('assets/Papyrus.ttf')
+    OUTPUT = 'output.jpg'
 
     password_hash = hashlib.sha256(
             str(request.form.get('password')).encode('utf-8')).hexdigest()
@@ -103,8 +103,7 @@ def post_quote():
         fill='black')
 
     # Save file
-    filename = 'output.jpg'
-    image.save(filename, quality=95)
+    image.save(OUTPUT, quality=95)
 
     return 'Thanks!'
 
@@ -115,4 +114,4 @@ def post_quote():
         if page['id'] == config['page_id']:
             page_access_token = page['access_token']
     graph = facebook.GraphAPI(access_token=page_access_token)
-    graph.put_photo(image=open(filename, 'rb'))
+    graph.put_photo(image=open(OUTPUT, 'rb'))
