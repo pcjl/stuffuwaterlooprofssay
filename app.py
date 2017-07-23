@@ -92,7 +92,7 @@ def post_quote():
 
     paragraph = textwrap.wrap(quote, width=MAX_CHARS)
     text = '\n'.join(paragraph)
-    source_text = '-{}, {}'.format(professor, course)
+    source_text = '-Prof. {}, {}'.format(professor, course)
 
     # Draw quote text
     draw = ImageDraw.Draw(image)
