@@ -138,10 +138,12 @@ def post_quote():
         })
 
     scheduled_posts_url = (
-        '{}/publishing_tools/?section=SCHEDULED_POSTS'
+        'https://facebook.com/{}/publishing_tools'
+        '/?section=SCHEDULED_POSTS'
     ).format(PAGE_ID)
 
     return Response(
-            'page/' + ast.literal_eval(response.text)[
-                'id'] if not scheduled else scheduled_posts_url,
+            'https://facebook.com/{}'.format(
+                ast.literal_eval(response.text)[
+                    'post_id']) if not scheduled else scheduled_posts_url,
             200)
