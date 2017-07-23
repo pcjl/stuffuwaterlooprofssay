@@ -3,7 +3,6 @@ from flask_sslify import SSLify
 from PIL import Image, ImageDraw, ImageFont
 import datetime
 import hashlib
-import json
 import os.path
 import pytz
 import requests
@@ -142,9 +141,6 @@ def post_quote():
             'source': open(OUTPUT, 'rb')
         })
 
-    data = json.loads(response.text)
-    data['page_id'] = PAGE_ID
-
     return Response(
-            json.dumps(data),
+            response.text,
             200)

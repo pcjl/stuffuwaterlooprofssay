@@ -15,22 +15,12 @@ jQuery(function($) {
                 submitButton.button('reset');
             },
             success: function(data, textStatus, jqXHR) {
-                var response = JSON.parse(jqXHR.responseText);
-
-                var published = response.post_id !== undefined;
-
-                var appUrl = published ? "fb://photo/" + response.id : "fb://profile/" + response.page_id;
-                var fallbackUrl = "http://www.facebook.com/" + response.id;
-
                 Snackbar.show( {
                         text: "Post successful!",
                         showActionButton: true,
                         actionText: "View Post",
                         onActionClick: function() {
-                            window.location.href = appUrl;
-                            setTimeout(function(){
-                                window.open(fallbackUrl, "_blank");
-                            }, 500);
+                            window.open("http://www.facebook.com/" + JSON.parse(jqXHR.responseText).id, "_blank");
                         }
                     }
                 );
