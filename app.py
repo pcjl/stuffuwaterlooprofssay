@@ -38,14 +38,14 @@ MAX_CHARS = 32
 BOTTOM_OFFSET = 150
 LINE_SPACING = 30
 
-BACKGROUND = resource_path('assets/background.jpg')
-FONT = resource_path('assets/Papyrus.ttf')
+BACKGROUND = resource_path('static/images/background.jpg')
+FONT = resource_path('static/fonts/Papyrus.ttf')
 OUTPUT = 'output.jpg'
 
 
 @app.route('/', methods=['GET'])
 def get_quote():
-    return render_template('form.html')
+    return render_template('index.html')
 
 
 @app.route('/', methods=['POST'])
