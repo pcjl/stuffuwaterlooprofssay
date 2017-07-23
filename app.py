@@ -36,7 +36,7 @@ def post_quote():
     QUOTE_SIZE = 60
     SOURCE_SIZE = 40
 
-    MAX_CHARS = 30
+    MAX_CHARS = 32
 
     BOTTOM_OFFSET = 150
     LINE_SPACING = 30
