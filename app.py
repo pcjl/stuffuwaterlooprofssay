@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, Response
+from flask_sslify import SSLify
 from PIL import Image, ImageDraw, ImageFont
 import ast
 import datetime
@@ -11,6 +12,9 @@ import textwrap
 
 
 app = Flask(__name__)
+
+if 'DYNO' in os.environ:
+    sslify = SSLify(app)
 
 
 def resource_path(relative_path):

@@ -1,5 +1,5 @@
 Flask
-Pillow
-facebook-sdk
+flask_sslify
 gunicorn
+Pillow
 pytz
