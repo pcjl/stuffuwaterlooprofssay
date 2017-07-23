@@ -11,7 +11,7 @@ jQuery(function($) {
             type: form.attr('method'),
             data: form.serialize(),
             error: function(jqXHR) {
-                $('.form-group[name="password"]').addClass("has-error")
+                $('.form-group[name="password"]').addClass("has-error has-feedback")
                 submitButton.button('reset');
             },
             success: function(data, textStatus, jqXHR) {
@@ -24,7 +24,7 @@ jQuery(function($) {
                         }
                     }
                 );
-                
+
                 submitButton.button('reset');
             },
         });
@@ -35,6 +35,7 @@ jQuery(function($) {
     $('#datetime').datetimepicker();
 
     $('.btn-default').click(function() {
+        $('textarea').val("");
         $('input[type=text]').val("");
     });
 });
