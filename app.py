@@ -22,6 +22,27 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
+# Constants
+PASSWORD_HASHES = [
+    os.environ['PASSWORD_HASH_PATRICK'],
+    os.environ['PASSWORD_HASH_JESSICA']
+]
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+PAGE_ID = os.environ['PAGE_ID']
+
+QUOTE_SIZE = 60
+SOURCE_SIZE = 40
+
+MAX_CHARS = 32
+
+BOTTOM_OFFSET = 150
+LINE_SPACING = 30
+
+BACKGROUND = resource_path('assets/background.jpg')
+FONT = resource_path('assets/Papyrus.ttf')
+OUTPUT = 'output.jpg'
+
+
 @app.route('/', methods=['GET'])
 def get_quote():
     return render_template('form.html')
@@ -29,26 +50,6 @@ def get_quote():
 
 @app.route('/', methods=['POST'])
 def post_quote():
-    # Constants
-    PASSWORD_HASHES = [
-        os.environ['PASSWORD_HASH_PATRICK'],
-        os.environ['PASSWORD_HASH_JESSICA']
-    ]
-    ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-    PAGE_ID = os.environ['PAGE_ID']
-
-    QUOTE_SIZE = 60
-    SOURCE_SIZE = 40
-
-    MAX_CHARS = 32
-
-    BOTTOM_OFFSET = 150
-    LINE_SPACING = 30
-
-    BACKGROUND = resource_path('assets/background.jpg')
-    FONT = resource_path('assets/Papyrus.ttf')
-    OUTPUT = 'output.jpg'
-
     password_hash = hashlib.sha256(
             str(request.form.get('password')).encode('utf-8')).hexdigest()
     if password_hash not in PASSWORD_HASHES:
