@@ -2,10 +2,10 @@
 <html lang="en">
     <head>
         <title>Stuff Uwaterloo Professors Say</title>
-        <!-- Latest compiled and minified CSS -->
+        <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-        <!-- Optional theme -->
+        <!-- Bootstrap default theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -17,7 +17,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js">
         </script>
 
-        <!-- Latest compiled and minified JavaScript -->
+        <!-- Boostrap JS -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
         <!-- boostrap-datetime-picker -->
@@ -25,29 +25,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js">
         </script>
 
-        <script type='text/javascript'>
-            jQuery(function($) {
-                $('form').submit(function(e) {
-                    var form = $('form')
-                    e.preventDefault();
+        <!-- Snackbar -->
+        <link rel="stylesheet" href="static/css/snackbar.min.css" />
+        <script src="static/js/snackbar.min.js">
+        </script>
 
-                    $.ajax({
-                        url: form.attr('url'),
-                        type: form.attr('method'),
-                        data: form.serialize(),
-                        error: function(jqXHR) {
-                            $('.form-group[name="password"]').addClass("has-error")
-                        },
-                        success: function(data, textStatus, jqXHR) {
-                            window.location.href = data;
-                        },
-                    });
-
-                    return false;
-                });
-
-                $('#datetime').datetimepicker();
-            });
+        <!-- Script -->
+        <script src="static/js/script.js">
         </script>
     </head>
     <body>
@@ -62,7 +46,7 @@
                 <fieldset>
                     <div class="form-group" name="quote">
                         <label for="quote">Quote</label>
-                        <textarea class="form-control" required name="quote" placeholder="Quote"></textarea>
+                        <input type="text" required class="form-control" name="quote" placeholder="Quote" />
                     </div>
 
                     <div class="form-group" name="prof">
@@ -95,8 +79,10 @@
                         <input type="password" required class="form-control" name="password" placeholder="Password"/>
                     </div>
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="btn-toolbar">
+                        <button type="submit" class="btn btn-primary" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Submitting...">Submit</button>
+
+                        <button type="button" class="btn btn-default">Clear fields</button>
                     </div>
                 </fieldset>
             </form>
