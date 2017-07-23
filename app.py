@@ -142,6 +142,6 @@ def post_quote():
     ).format(PAGE_ID)
 
     return Response(
-            ast.literal_eval(response.text)[
-                'post_id'] if not scheduled else scheduled_posts_url,
+            'page/' + ast.literal_eval(response.text)[
+                'id'] if not scheduled else scheduled_posts_url,
             200)
