@@ -11,7 +11,7 @@ jQuery(function($) {
             type: form.attr('method'),
             data: form.serialize(),
             error: function(jqXHR) {
-                $('.form-group[name="password"]').addClass("has-error has-feedback")
+                $('.form-group[name="password"]').addClass("has-error");
                 submitButton.button('reset');
             },
             success: function(data, textStatus, jqXHR) {
@@ -33,6 +33,9 @@ jQuery(function($) {
     });
 
     $('#datetime').datetimepicker();
+    $('input[name=datetime]').focus(function() {
+        this.blur();
+    });
 
     $('.btn-default').click(function() {
         $('textarea').val("");
