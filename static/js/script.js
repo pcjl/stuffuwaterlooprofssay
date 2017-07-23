@@ -27,7 +27,7 @@ jQuery(function($) {
                         showActionButton: true,
                         actionText: "View Post",
                         onActionClick: function() {
-                            window.location = appUrl;
+                            window.location.href = appUrl;
                             setTimeout(function(){
                                 window.open(fallbackUrl, "_blank");
                             }, 500);
