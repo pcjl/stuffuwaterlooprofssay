@@ -1,9 +1,9 @@
 from flask import Flask, request, render_template, Response
 from flask_sslify import SSLify
 from PIL import Image, ImageDraw, ImageFont
-import ast
 import datetime
 import hashlib
+import json
 import os.path
 import pytz
 import requests
@@ -142,13 +142,9 @@ def post_quote():
             'source': open(OUTPUT, 'rb')
         })
 
-    scheduled_posts_url = (
-        'https://facebook.com/{}/publishing_tools'
-        '/?section=SCHEDULED_POSTS'
-    ).format(PAGE_ID)
+    data = json.loads(response.text)
+    data['page_id'] = PAGE_ID
 
     return Response(
-            'https://facebook.com/{}'.format(
-                ast.literal_eval(response.text)[
-                    'post_id']) if not scheduled else scheduled_posts_url,
+            json.dumps(data),
             200)
