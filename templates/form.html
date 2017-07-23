@@ -39,7 +39,11 @@
                             $('.form-group[name="password"]').addClass("has-error")
                         },
                         success: function(data, textStatus, jqXHR) {
-                            window.location.href = data;
+                            setTimeout(function () {
+                                window.location = "https://facebook.com/" + data;
+                            }, 25);
+                            window.location = "fb://" + data;
+                            // window.location.href = data;
                         },
                     });
 
