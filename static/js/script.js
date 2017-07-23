@@ -33,7 +33,9 @@ jQuery(function($) {
     });
 
     $('#datetime').datetimepicker({
-        ignoreReadonly: true
+        showClear: true,
+        showClose: true,
+        focusOnShow: false,
     });
 
     $('.btn-default').click(function() {
