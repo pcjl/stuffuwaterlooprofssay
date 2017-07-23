@@ -30,7 +30,10 @@ def get_quote():
 @app.route('/', methods=['POST'])
 def post_quote():
     # Constants
-    PASSWORD_HASH = os.environ['PASSWORD_HASH']
+    PASSWORD_HASHES = [
+        os.environ['PASSWORD_HASH_PATRICK'],
+        os.environ['PASSWORD_HASH_JESSICA']
+    ]
     ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
     PAGE_ID = os.environ['PAGE_ID']
 
@@ -48,7 +51,7 @@ def post_quote():
 
     password_hash = hashlib.sha256(
             str(request.form.get('password')).encode('utf-8')).hexdigest()
-    if password_hash != PASSWORD_HASH:
+    if password_hash not in PASSWORD_HASHES:
         return Response(
             'Invalid credentials',
             401,
