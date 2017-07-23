@@ -32,9 +32,8 @@ jQuery(function($) {
         return false;
     });
 
-    $('#datetime').datetimepicker();
-    $('input[name=datetime]').focus(function() {
-        this.blur();
+    $('#datetime').datetimepicker({
+        ignoreReadonly: true
     });
 
     $('.btn-default').click(function() {
