@@ -1,6 +1,5 @@
 import datetime
 import io
-import hashlib
 import os
 import requests
 import textwrap
@@ -55,11 +54,11 @@ class User(db.Model, flask_login.UserMixin):
 
 @login_manager.user_loader
 def load_user(username):
-    if not User.query.get(username=username):
+    if User.query.get(username=username) is None:
         return
 
     user = User()
-    user.id = username
+    user.username = username
     return user
 
 
@@ -67,15 +66,16 @@ def load_user(username):
 def load_request(request):
     username = request.form.get('username')
 
-    if User.query.filter_by(username=username).first():
+    if User.query.get(username) is None:
         return
 
     user = User()
-    user.id = username
+    user.username = username
 
-    password_hash = hashlib.sha256(
-        str(flask.request.form.get('password')).encode('utf-8')).hexdigest()
-    user.is_authenticated = password_hash == User.query.get(username=username).password
+    password_hash = passlib.hash.pbkdf2_sha256.hash(
+        request.form.get('password'))
+    user.is_authenticated = password_hash == User.query.get(
+        username).password
 
     return user
 
@@ -94,12 +94,12 @@ def login():
         return flask.render_template('login.html')
 
     username = flask.request.form['username']
-    password_hash = hashlib.sha256(
-        str(flask.request.form.get('password')).encode('utf-8')).hexdigest()
+    password_hash = passlib.hash.pbkdf2_sha256.hash(
+        flask.request.form.get('password'))
 
-    if password_hash == User.query.get(username=username).password:
+    if password_hash == User.query.get(username).password:
         user = User()
-        user.id = username
+        user.username = username
         flask_login.login_user(
             user,
             remember=bool(flask.request.form.getlist('rememberme')))
