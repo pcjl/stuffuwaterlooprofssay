@@ -16,6 +16,7 @@ import pytz
 app = flask.Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 login_manager = flask_login.LoginManager()
@@ -23,8 +24,6 @@ login_manager.init_app(app)
 
 if 'DYNO' in os.environ:
     sslify = flask_sslify.SSLify(app)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 users = {
     'patrick': {
