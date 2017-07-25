@@ -11,7 +11,10 @@ jQuery(function($) {
             type: form.attr('method'),
             data: form.serialize(),
             error: function(jqXHR) {
-                $('.form-group[name="password"]').addClass("has-error");
+                Snackbar.show( {
+                    text: "An error has occurred. Please try again."
+                });
+                
                 submitButton.button('reset');
             },
             success: function(data, textStatus, jqXHR) {

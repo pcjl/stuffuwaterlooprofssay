@@ -1,19 +1,32 @@
-from flask import Flask, request, render_template, Response
 from flask_sslify import SSLify
 from PIL import Image, ImageDraw, ImageFont
 import datetime
+import flask
+import flask_login
 import hashlib
-import os.path
+import os
 import pytz
 import requests
 import sys
 import textwrap
 
-
-app = Flask(__name__)
+app = flask.Flask(__name__)
+app.secret_key = os.environ['SECRET_KEY']
 
 if 'DYNO' in os.environ:
     sslify = SSLify(app)
+
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+
+users = {
+    'patrick': {
+        'password': os.environ['PASSWORD_HASH_PATRICK']
+    },
+    'jessica': {
+        'password': os.environ['PASSWORD_HASH_JESSICA']
+    }
+}
 
 
 def resource_path(relative_path):
@@ -25,11 +38,6 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-# Constants
-PASSWORD_HASHES = [
-    os.environ['PASSWORD_HASH_PATRICK'],
-    os.environ['PASSWORD_HASH_JESSICA']
-]
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 PAGE_ID = os.environ['PAGE_ID']
 
@@ -46,28 +54,87 @@ FONT = resource_path('static/fonts/Papyrus.ttf')
 OUTPUT = 'output.jpg'
 
 
-@app.route('/', methods=['GET'])
-def get_quote():
-    return render_template('index.html')
+class User(flask_login.UserMixin):
+    pass
 
 
-@app.route('/', methods=['POST'])
-def post_quote():
+@login_manager.user_loader
+def load_user(username):
+    if username not in users:
+        return
+
+    user = User()
+    user.id = username
+    return user
+
+
+@login_manager.request_loader
+def load_request(request):
+    username = request.form.get('username')
+    if username not in users:
+        return
+
+    user = User()
+    user.id = username
+
     password_hash = hashlib.sha256(
-            str(request.form.get('password')).encode('utf-8')).hexdigest()
-    if password_hash not in PASSWORD_HASHES:
-        return Response(
+        str(flask.request.form.get('password')).encode('utf-8')).hexdigest()
+    user.is_authenticated = password_hash == users[username]['password']
+
+    return user
+
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return flask.redirect(flask.url_for('login'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if flask.request.method == 'GET':
+        if flask_login.current_user.is_authenticated:
+            return flask.redirect(flask.url_for('index'))
+
+        return flask.render_template('login.html')
+
+    username = flask.request.form['username']
+    password_hash = hashlib.sha256(
+        str(flask.request.form.get('password')).encode('utf-8')).hexdigest()
+
+    if password_hash == users[username]['password']:
+        user = User()
+        user.id = username
+        flask_login.login_user(
+            user,
+            remember=flask.request.form.get('rememberme'))
+        return flask.Response(
+            'Login successful',
+            200)
+
+    return flask.Response(
             'Invalid credentials',
-            401,
-            {'WWWAuthenticate': 'Basic realm="Login Required"'})
+            401)
+
+
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return flask.redirect(flask.url_for('login'))
+
+
+@app.route('/', methods=['GET', 'POST'])
+@flask_login.login_required
+def index():
+    if flask.request.method == 'GET':
+        return flask.render_template('index.html')
 
     # Input
-    quote = request.form.get('quote')
-    professor = request.form.get('prof')
-    course = request.form.get('course')
-    caption = request.form.get('caption')
+    quote = flask.request.form.get('quote')
+    professor = flask.request.form.get('prof')
+    course = flask.request.form.get('course')
+    caption = flask.request.form.get('caption')
 
-    date_time = request.form.get('datetime')
+    date_time = flask.request.form.get('datetime')
     scheduled = date_time != ''
 
     if scheduled:
@@ -141,6 +208,6 @@ def post_quote():
             'source': open(OUTPUT, 'rb')
         })
 
-    return Response(
+    return flask.Response(
             response.text,
             200)
