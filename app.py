@@ -7,7 +7,6 @@ import hashlib
 import os
 import pytz
 import requests
-import sys
 import textwrap
 
 app = flask.Flask(__name__)
@@ -28,16 +27,6 @@ users = {
     }
 }
 
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 PAGE_ID = os.environ['PAGE_ID']
 
@@ -49,8 +38,8 @@ MAX_CHARS = 32
 BOTTOM_OFFSET = 150
 LINE_SPACING = 30
 
-BACKGROUND = resource_path('static/images/background.jpg')
-FONT = resource_path('static/fonts/Papyrus.ttf')
+BACKGROUND = 'background.jpg'
+FONT = 'Papyrus.ttf'
 OUTPUT = 'output.jpg'
 
 
