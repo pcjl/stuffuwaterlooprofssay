@@ -8,7 +8,7 @@ import flask
 import flask_login
 import flask_sslify
 import flask_sqlalchemy
-import passlib
+from passlib.hash import pbkdf2_sha256
 import PIL
 import pytz
 
@@ -72,8 +72,7 @@ def load_request(request):
     user = User()
     user.username = username
 
-    password_hash = passlib.hash.pbkdf2_sha256.hash(
-        request.form.get('password'))
+    password_hash = pbkdf2_sha256.hash(request.form.get('password'))
     user.is_authenticated = password_hash == User.query.get(
         username).password
 
@@ -94,8 +93,7 @@ def login():
         return flask.render_template('login.html')
 
     username = flask.request.form['username']
-    password_hash = passlib.hash.pbkdf2_sha256.hash(
-        flask.request.form.get('password'))
+    password_hash = pbkdf2_sha256.hash(flask.request.form.get('password'))
 
     if password_hash == User.query.get(username).password:
         user = User()
