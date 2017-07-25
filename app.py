@@ -26,15 +26,6 @@ login_manager.init_app(app)
 if 'DYNO' in os.environ:
     sslify = flask_sslify.SSLify(app)
 
-users = {
-    'patrick': {
-        'password': os.environ['PASSWORD_HASH_PATRICK']
-    },
-    'jessica': {
-        'password': os.environ['PASSWORD_HASH_JESSICA']
-    }
-}
-
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 PAGE_ID = os.environ['PAGE_ID']
 
@@ -51,8 +42,7 @@ FONT = 'Papyrus.ttf'
 
 
 class User(db.Model, flask_login.UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
+    username = db.Column(db.String(80), primary_key=True)
     password = db.Column(db.String(120))
 
     def __init__(self, username, password):
@@ -76,7 +66,8 @@ def load_user(username):
 @login_manager.request_loader
 def load_request(request):
     username = request.form.get('username')
-    if username not in users:
+
+    if User.query.filter_by(username=username).first():
         return
 
     user = User()
@@ -84,7 +75,7 @@ def load_request(request):
 
     password_hash = hashlib.sha256(
         str(flask.request.form.get('password')).encode('utf-8')).hexdigest()
-    user.is_authenticated = password_hash == users[username]['password']
+    user.is_authenticated = password_hash == User.query.get(username=username).password
 
     return user
 
