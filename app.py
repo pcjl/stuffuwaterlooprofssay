@@ -17,6 +17,7 @@ app = flask.Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 login_manager = flask_login.LoginManager()
@@ -49,7 +50,7 @@ BACKGROUND = 'background.jpg'
 FONT = 'Papyrus.ttf'
 
 
-class User(flask_login.UserMixin):
+class User(flask_sqlalchemy.db.Model, flask_login.UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(120))
