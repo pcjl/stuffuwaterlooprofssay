@@ -22,7 +22,7 @@ jQuery(function($) {
                         text: "Post successful!",
                         showActionButton: true,
                         actionText: "View Post",
-                        actionTextColor: #FFEB3B,
+                        actionTextColor: "#FFEB3B",
                         onActionClick: function() {
                             window.open("http://www.facebook.com/" + JSON.parse(jqXHR.responseText).id, "_blank");
                         }
