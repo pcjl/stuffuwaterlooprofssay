@@ -1,23 +1,30 @@
-from flask_sslify import SSLify
-from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
 import datetime
-import flask
-import flask_login
+import io
 import hashlib
 import os
-import pytz
 import requests
 import textwrap
+
+import flask
+import flask_login
+import flask_sslify
+import flask_sqlalchemy
+import passlib
+import PIL
+import pytz
 
 app = flask.Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 
-if 'DYNO' in os.environ:
-    sslify = SSLify(app)
+db = flask_sqlalchemy.SQLAlchemy(app)
 
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
+
+if 'DYNO' in os.environ:
+    sslify = flask_sslify.SSLify(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 users = {
     'patrick': {
@@ -44,7 +51,16 @@ FONT = 'Papyrus.ttf'
 
 
 class User(flask_login.UserMixin):
-    pass
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+    password = db.Column(db.String(120))
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+    def __repr__(self):
+        return '<username {}>'.format(self.username)
 
 
 @login_manager.user_loader
@@ -138,11 +154,11 @@ def index():
         timestamp = int(td)
 
     # Load resources
-    image = Image.open(BACKGROUND)
-    quote_font = ImageFont.truetype(
+    image = PIL.Image.open(BACKGROUND)
+    quote_font = PIL.ImageFont.truetype(
         font=FONT,
         size=QUOTE_SIZE)
-    source_font = ImageFont.truetype(
+    source_font = PIL.ImageFont.truetype(
         font=FONT,
         size=SOURCE_SIZE)
 
@@ -155,7 +171,7 @@ def index():
     source_text = '-Prof. {}, {}'.format(professor, course)
 
     # Draw quote text
-    draw = ImageDraw.Draw(image)
+    draw = PIL.ImageDraw.Draw(image)
     text_x, text_y = draw.multiline_textsize(
         text,
         font=quote_font,
@@ -179,7 +195,7 @@ def index():
         fill='black')
 
     # Save file
-    file = BytesIO()
+    file = io.BytesIO()
     image.save(file, format="JPEG", quality=95)
     file.seek(0)
 
