@@ -1,6 +1,8 @@
 Flask==0.12.2
 Flask-Login==0.4.0
 flask_sslify==0.1.5
+flask_sqlalchemy
+passlib
 gunicorn==19.7.1
 Pillow==4.2.1
 pytz==2017.2
