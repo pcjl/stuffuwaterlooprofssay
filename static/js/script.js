@@ -14,7 +14,7 @@ jQuery(function($) {
                 Snackbar.show( {
                     text: "An error has occurred. Please try again."
                 });
-                
+
                 submitButton.button('reset');
             },
             success: function(data, textStatus, jqXHR) {
@@ -22,6 +22,7 @@ jQuery(function($) {
                         text: "Post successful!",
                         showActionButton: true,
                         actionText: "View Post",
+                        actionTextColor: #FFEB3B,
                         onActionClick: function() {
                             window.open("http://www.facebook.com/" + JSON.parse(jqXHR.responseText).id, "_blank");
                         }
