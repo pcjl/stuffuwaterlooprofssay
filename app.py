@@ -181,6 +181,7 @@ def index():
     # Save file
     file = BytesIO()
     image.save(file, format="JPEG", quality=95)
+    file.seek(0)
 
     data = {
         'access_token': ACCESS_TOKEN,
