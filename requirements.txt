@@ -5,5 +5,5 @@ flask_sqlalchemy==2.2
 passlib==1.7.1
 gunicorn==19.7.1
 Pillow==4.2.1
-psycopg2==.7.3
+psycopg2==2.7.3
 pytz==2017.2
