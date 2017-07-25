@@ -54,23 +54,20 @@ class User(db.Model, flask_login.UserMixin):
 
 @login_manager.user_loader
 def load_user(username):
-    if username is None or User.query.get(username) is None:
+    if username is None:
         return
 
-    user = User()
-    user.username = username
-    return user
+    return User.query.get(username)
 
 
 @login_manager.request_loader
 def load_request(request):
     username = request.form.get('username')
 
-    if username is None or User.query.get(username) is None:
+    if username is None:
         return
 
-    user = User()
-    user.username = username
+    user = User.query.get(username)
 
     user.is_authenticated = pbkdf2_sha256.verify(
         request.form.get('password'), User.query.get(username).password)
@@ -94,11 +91,10 @@ def login():
     username = flask.request.form['username']
 
     if pbkdf2_sha256.verify(
-        flask.request.form.get('password'), User.query.get(username).password):
-        user = User()
-        user.username = username
+            flask.request.form.get('password'),
+            User.query.get(username).password):
         flask_login.login_user(
-            user,
+            User.query.get(username),
             remember=bool(flask.request.form.getlist('rememberme')))
         return flask.Response(
             'Login successful',
