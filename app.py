@@ -1,5 +1,5 @@
 from flask_sslify import SSLify
-from io import BytesIO
+from io import StringIO
 from PIL import Image, ImageDraw, ImageFont
 import datetime
 import flask
@@ -179,8 +179,9 @@ def index():
         fill='black')
 
     # Save file
-    file = BytesIO()
+    file = StringIO()
     image.save(file, quality=95)
+    file.seek(0)
 
     data = {
         'access_token': ACCESS_TOKEN,

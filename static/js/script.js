@@ -12,7 +12,8 @@ jQuery(function($) {
             data: form.serialize(),
             error: function(jqXHR) {
                 Snackbar.show( {
-                    text: "An error has occurred. Please try again."
+                    text: "An error has occurred. Please try again.",
+                    actionTextColor: "#FFEB3B",
                 });
 
                 submitButton.button('reset');
