@@ -72,9 +72,8 @@ def load_request(request):
     user = User()
     user.username = username
 
-    password_hash = pbkdf2_sha256.hash(request.form.get('password'))
-    user.is_authenticated = password_hash == User.query.get(
-        username).password
+    user.is_authenticated = pbkdf2_sha256.verify(
+        request.form.get('password'), User.query.get(username).password)
 
     return user
 
@@ -93,9 +92,9 @@ def login():
         return flask.render_template('login.html')
 
     username = flask.request.form['username']
-    password_hash = pbkdf2_sha256.hash(flask.request.form.get('password'))
 
-    if password_hash == User.query.get(username).password:
+    if pbkdf2_sha256.verify(
+        flask.request.form.get('password'), User.query.get(username).password):
         user = User()
         user.username = username
         flask_login.login_user(
