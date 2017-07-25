@@ -13,12 +13,12 @@ import PIL
 import pytz
 
 app = flask.Flask(__name__)
-app.secret_key = os.environ['SECRET_KEY']
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = flask_sqlalchemy.SQLAlchemy(app)
 
+app.secret_key = os.environ['SECRET_KEY']
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
@@ -54,7 +54,7 @@ class User(db.Model, flask_login.UserMixin):
 
 @login_manager.user_loader
 def load_user(username):
-    if User.query.get(username=username) is None:
+    if username is None or User.query.get(username) is None:
         return
 
     user = User()
@@ -66,7 +66,7 @@ def load_user(username):
 def load_request(request):
     username = request.form.get('username')
 
-    if User.query.get(username) is None:
+    if username is None or User.query.get(username) is None:
         return
 
     user = User()
