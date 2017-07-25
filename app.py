@@ -1,4 +1,5 @@
 from flask_sslify import SSLify
+from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import datetime
 import flask
@@ -40,7 +41,6 @@ LINE_SPACING = 30
 
 BACKGROUND = 'background.jpg'
 FONT = 'Papyrus.ttf'
-OUTPUT = 'output.jpg'
 
 
 class User(flask_login.UserMixin):
@@ -179,7 +179,8 @@ def index():
         fill='black')
 
     # Save file
-    image.save(OUTPUT, quality=95)
+    file = BytesIO()
+    image.save(file, quality=95)
 
     data = {
         'access_token': ACCESS_TOKEN,
@@ -194,7 +195,7 @@ def index():
         'https://graph.facebook.com/{}/photos'.format(PAGE_ID),
         data=data,
         files={
-            'source': open(OUTPUT, 'rb')
+            'source': file
         })
 
     return flask.Response(
