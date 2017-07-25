@@ -11,7 +11,7 @@ import sys
 import textwrap
 
 app = flask.Flask(__name__)
-app.secret_key = 'SM\xb6*\xe1\x9e\x1f[\x10\x1d\xcc\xbe\xa7\xb4\xaa\'\x05\x95"R\xa2X\x93\x96'
+app.secret_key = os.environ['SECRET_KEY']
 
 if 'DYNO' in os.environ:
     sslify = SSLify(app)
