@@ -11,7 +11,7 @@ import sys
 import textwrap
 
 app = flask.Flask(__name__)
-app.secret_key = os.environ['SECRET_KEY']
+app.secret_key = 'SM\xb6*\xe1\x9e\x1f[\x10\x1d\xcc\xbe\xa7\xb4\xaa\'\x05\x95"R\xa2X\x93\x96'
 
 if 'DYNO' in os.environ:
     sslify = SSLify(app)
@@ -106,7 +106,7 @@ def login():
         user.id = username
         flask_login.login_user(
             user,
-            remember=flask.request.form.get('rememberme'))
+            remember=bool(flask.request.form.getlist('rememberme')))
         return flask.Response(
             'Login successful',
             200)
