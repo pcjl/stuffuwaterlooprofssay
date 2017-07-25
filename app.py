@@ -55,7 +55,7 @@ class User(db.Model, flask_login.UserMixin):
 
 @login_manager.user_loader
 def load_user(username):
-    if username not in users:
+    if not User.query.get(username=username):
         return
 
     user = User()
@@ -97,7 +97,7 @@ def login():
     password_hash = hashlib.sha256(
         str(flask.request.form.get('password')).encode('utf-8')).hexdigest()
 
-    if password_hash == users[username]['password']:
+    if password_hash == User.query.get(username=username).password:
         user = User()
         user.id = username
         flask_login.login_user(
