@@ -1,43 +1,25 @@
 import datetime
 import io
 import os
-import requests
 import textwrap
 
+from PIL import Image, ImageDraw, ImageFont
 import flask
 import flask_login
 import flask_sslify
 import flask_sqlalchemy
 import passlib.hash
-import PIL
 import pytz
+import requests
 
 app = flask.Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_pyfile('config.py')
 db = flask_sqlalchemy.SQLAlchemy(app)
-
-app.secret_key = os.environ['SECRET_KEY']
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
 if 'DYNO' in os.environ:
     sslify = flask_sslify.SSLify(app)
-
-ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-PAGE_ID = os.environ['PAGE_ID']
-
-QUOTE_SIZE = 60
-SOURCE_SIZE = 40
-
-MAX_CHARS = 32
-
-BOTTOM_OFFSET = 150
-LINE_SPACING = 30
-
-BACKGROUND = 'background.jpg'
-FONT = 'Papyrus.ttf'
 
 
 class User(db.Model, flask_login.UserMixin):
@@ -55,7 +37,7 @@ class User(db.Model, flask_login.UserMixin):
 
 @login_manager.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    return User.query.get(id)
 
 
 @login_manager.unauthorized_handler
@@ -122,34 +104,34 @@ def index():
         timestamp = int(td)
 
     # Load resources
-    image = PIL.Image.open(BACKGROUND)
-    quote_font = PIL.ImageFont.truetype(
-        font=FONT,
-        size=QUOTE_SIZE)
-    source_font = PIL.ImageFont.truetype(
-        font=FONT,
-        size=SOURCE_SIZE)
+    image = Image.open(app.config['BACKGROUND'])
+    quote_font = ImageFont.truetype(
+        font=app.config['FONT'],
+        size=app.config['QUOTE_SIZE'])
+    source_font = ImageFont.truetype(
+        font=app.config['FONT'],
+        size=app.config['SOURCE_SIZE'])
 
     # Parse data
     width, height = image.size
-    quote_height = height - BOTTOM_OFFSET
+    quote_height = height - app.config['BOTTOM_OFFSET']
 
-    paragraph = textwrap.wrap(quote, width=MAX_CHARS)
+    paragraph = textwrap.wrap(quote, width=app.config['MAX_CHARS'])
     text = '\n'.join(paragraph)
     source_text = '-Prof. {}, {}'.format(professor, course)
 
     # Draw quote text
-    draw = PIL.ImageDraw.Draw(image)
+    draw = ImageDraw.Draw(image)
     text_x, text_y = draw.multiline_textsize(
         text,
         font=quote_font,
-        spacing=LINE_SPACING)
+        spacing=app.config['LINE_SPACING'])
     draw.multiline_text(
         ((width - text_x) / 2, (quote_height - text_y) / 2),
         text,
         fill='black',
         font=quote_font,
-        spacing=LINE_SPACING,
+        spacing=app.config['LINE_SPACING'],
         align='center')
 
     # Draw source text
@@ -168,7 +150,7 @@ def index():
     file.seek(0)
 
     data = {
-        'access_token': ACCESS_TOKEN,
+        'access_token': app.config['ACCESS_TOKEN'],
         'message': caption,
         'published': not scheduled,
     }
@@ -177,7 +159,7 @@ def index():
         data['scheduled_publish_time'] = timestamp
 
     response = requests.post(
-        'https://graph.facebook.com/{}/photos'.format(PAGE_ID),
+        'https://graph.facebook.com/{}/photos'.format(app.config['PAGE_ID']),
         data=data,
         files={
             'source': file
