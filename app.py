@@ -53,7 +53,7 @@ def login():
 
         return flask.render_template('login.html')
 
-    username = flask.request.form['username']
+    username = flask.request.form['username'].lower()
     password = flask.request.form.get('password')
     rememberme = bool(flask.request.form.getlist('rememberme'))
 
