@@ -8,7 +8,7 @@ import flask
 import flask_login
 import flask_sslify
 import flask_sqlalchemy
-from passlib.hash import pbkdf2_sha256
+import passlib.hash
 import PIL
 import pytz
 
@@ -41,10 +41,12 @@ FONT = 'Papyrus.ttf'
 
 
 class User(db.Model, flask_login.UserMixin):
-    username = db.Column(db.String(80), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80))
     password = db.Column(db.String(120))
 
-    def __init__(self, username, password):
+    def __init__(self, id, username, password):
+        self.id = id
         self.username = username
         self.password = password
 
@@ -54,23 +56,21 @@ class User(db.Model, flask_login.UserMixin):
 
 @login_manager.user_loader
 def load_user(username):
-    if username is None:
-        return
-
-    return User.query.get(username)
+    return User.query.filter_by(username=username).first()
 
 
 @login_manager.request_loader
 def load_request(request):
     username = request.form.get('username')
+    password = request.form.get('password')
 
-    if username is None:
+    user = User.query.filter_by(username=username).first()
+
+    if user is None:
         return
 
-    user = User.query.get(username)
-
-    user.is_authenticated = pbkdf2_sha256.verify(
-        request.form.get('password'), User.query.get(username).password)
+    user.is_authenticated = passlib.hash.pbkdf2_sha256.verify(
+        password, user.password)
 
     return user
 
@@ -85,17 +85,17 @@ def login():
     if flask.request.method == 'GET':
         if flask_login.current_user.is_authenticated:
             return flask.redirect(flask.url_for('index'))
-
         return flask.render_template('login.html')
 
     username = flask.request.form['username']
+    password = flask.request.form.get('password')
+    rememberme = bool(flask.request.form.getlist('rememberme'))
 
-    if pbkdf2_sha256.verify(
-            flask.request.form.get('password'),
-            User.query.get(username).password):
-        flask_login.login_user(
-            User.query.get(username),
-            remember=bool(flask.request.form.getlist('rememberme')))
+    user = User.query.filter_by(username=username).first()
+
+    if user is not None and passlib.hash.pbkdf2_sha256.verify(
+            password, user.password):
+        flask_login.login_user(user, remember=rememberme)
         return flask.Response(
             'Login successful',
             200)
