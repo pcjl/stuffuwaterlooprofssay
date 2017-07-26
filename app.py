@@ -42,11 +42,10 @@ FONT = 'Papyrus.ttf'
 
 class User(db.Model, flask_login.UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80))
+    username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(120))
 
-    def __init__(self, id, username, password):
-        self.id = id
+    def __init__(self, username, password):
         self.username = username
         self.password = password
 
