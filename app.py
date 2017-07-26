@@ -59,22 +59,6 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-@login_manager.request_loader
-def load_request(request):
-    username = request.form.get('username')
-    password = request.form.get('password')
-
-    user = User.query.filter_by(username=username).first()
-
-    if user is None:
-        return
-
-    user.is_authenticated = passlib.hash.pbkdf2_sha256.verify(
-        password, user.password)
-
-    return user
-
-
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return flask.redirect(flask.url_for('login'))
