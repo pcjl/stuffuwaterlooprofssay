@@ -51,12 +51,12 @@ class User(db.Model, flask_login.UserMixin):
         self.password = password
 
     def __repr__(self):
-        return '<username {}>'.format(self.username)
+        return '<User {}>'.format(self.username)
 
 
 @login_manager.user_loader
-def load_user(username):
-    return User.query.filter_by(username=username).first()
+def load_user(id):
+    return User.query.get(int(id))
 
 
 @login_manager.request_loader
@@ -85,6 +85,7 @@ def login():
     if flask.request.method == 'GET':
         if flask_login.current_user.is_authenticated:
             return flask.redirect(flask.url_for('index'))
+
         return flask.render_template('login.html')
 
     username = flask.request.form['username']
@@ -96,6 +97,8 @@ def login():
     if user is not None and passlib.hash.pbkdf2_sha256.verify(
             password, user.password):
         flask_login.login_user(user, remember=rememberme)
+        print(flask_login.current_user)
+        print(flask_login.current_user.is_authenticated)
         return flask.Response(
             'Login successful',
             200)
