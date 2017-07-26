@@ -7,4 +7,4 @@ Pillow==4.2.1
 passlib==1.7.1
 psycopg2==2.7.3
 pytz==2017.2
-requests==2.2.1
+requests==2.18.1
