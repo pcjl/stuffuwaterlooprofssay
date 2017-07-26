@@ -12,7 +12,7 @@ jQuery(function($) {
             data: form.serialize(),
             error: function(jqXHR) {
                 Snackbar.show( {
-                    text: "Your username and/or password is incorrect. Please try again.",
+                    text: "Your username and/or password are invalid. Please try again.",
                     actionTextColor: "#FFEB3B",
                 });
 
