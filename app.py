@@ -81,8 +81,6 @@ def login():
     if user is not None and passlib.hash.pbkdf2_sha256.verify(
             password, user.password):
         flask_login.login_user(user, remember=rememberme)
-        print(flask_login.current_user)
-        print(flask_login.current_user.is_authenticated)
         return flask.Response(
             'Login successful',
             200)

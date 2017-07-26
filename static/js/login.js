@@ -15,7 +15,7 @@ jQuery(function($) {
                 submitButton.button('reset');
             },
             success: function(data, textStatus, jqXHR) {
-                window.location = "/"
+                window.location.href = "/"
             }
         });
 
