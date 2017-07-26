@@ -187,3 +187,22 @@ def index():
     return flask.Response(
             response.text,
             200)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if flask.request.method == 'GET':
+        return flask.render_template('register.html')
+
+    username = flask.request.form['username']
+    password = flask.request.form.get('password')
+
+    user = User(
+        id=2,
+        username=username,
+        password=passlib.hash.pbkdf2_sha256.hash(password))
+    db.session.add(user)
+    db.session.commit()
+
+    flask_login.login_user(user)
+    return flask.redirect(flask.url_for('index'))
