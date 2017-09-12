@@ -83,7 +83,6 @@ def index():
     if flask.request.method == 'GET':
         return flask.render_template('index.html')
 
-    # Input
     quote = flask.request.form.get('quote')
     professor = flask.request.form.get('prof')
     course = flask.request.form.get('course')
@@ -103,29 +102,33 @@ def index():
                 1970, 1, 1, tzinfo=pytz.utc)).total_seconds()
         timestamp = int(td)
 
-    # Load resources
-    image = Image.open(app.config['BACKGROUND'])
+    max_chars = 32
+    paragraph = textwrap.wrap(quote, width=max_chars)
+
+    extra_lines = (max(0, len(paragraph) - 6) + 1) // 2
+    quote_size = 60 - 6 * extra_lines
+    if extra_lines:
+        max_chars += 6 * extra_lines
+        paragraph = textwrap.wrap(quote, width=max_chars)
+
+    text = '\n'.join(paragraph)
+    source_text = '-Prof. {}, {}'.format(professor, course)
+
     quote_font = ImageFont.truetype(
         font=app.config['FONT'],
-        size=app.config['QUOTE_SIZE'])
+        size=quote_size)
     source_font = ImageFont.truetype(
         font=app.config['FONT'],
         size=app.config['SOURCE_SIZE'])
 
-    # Parse data
-    width, height = image.size
-    quote_height = height - app.config['BOTTOM_OFFSET']
-
-    paragraph = textwrap.wrap(quote, width=app.config['MAX_CHARS'])
-    text = '\n'.join(paragraph)
-    source_text = '-Prof. {}, {}'.format(professor, course)
-
-    # Draw quote text
+    image = Image.open(app.config['BACKGROUND'])
     draw = ImageDraw.Draw(image)
     text_x, text_y = draw.multiline_textsize(
         text,
         font=quote_font,
         spacing=app.config['LINE_SPACING'])
+    width, height = image.size
+    quote_height = height - app.config['BOTTOM_OFFSET']
     draw.multiline_text(
         ((width - text_x) / 2, (quote_height - text_y) / 2),
         text,
@@ -134,7 +137,6 @@ def index():
         spacing=app.config['LINE_SPACING'],
         align='center')
 
-    # Draw source text
     text_x, text_y = draw.textsize(
         source_text,
         font=source_font)
@@ -144,7 +146,6 @@ def index():
         font=source_font,
         fill='black')
 
-    # Save file
     file = io.BytesIO()
     image.save(file, format="JPEG", quality=95)
     file.seek(0)
