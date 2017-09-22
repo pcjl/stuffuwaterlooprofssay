@@ -85,6 +85,7 @@ def index():
 
     quote = flask.request.form.get('quote')
     professor = flask.request.form.get('prof')
+    is_professor = 'isprof' in flask.request.form
     course = flask.request.form.get('course')
     caption = flask.request.form.get('caption')
 
@@ -112,7 +113,8 @@ def index():
         paragraph = textwrap.wrap(quote, width=max_chars)
 
     text = '\n'.join(paragraph)
-    source_text = '-Prof. {}, {}'.format(professor, course)
+    source_text = '-Prof. {}, {}'.format(professor, course) if (
+        is_professor) else '-{}, {}'.format(professor, course)
 
     quote_font = ImageFont.truetype(
         font=app.config['FONT'],
