@@ -46,5 +46,6 @@ jQuery(function($) {
     $('.btn-default').click(function() {
         $('textarea').val("");
         $('input[type=text]').val("");
+        $('input[type=checkbox]').prop('checked', true);
     });
 });
