@@ -96,6 +96,12 @@ def index():
         pattern = '%m/%d/%Y %I:%M %p'
         dt = datetime.datetime.strptime(date_time, pattern)
 
+        if dt < datetime.datetime.now() or (
+                dt - datetime.datetime.now() <= datetime.timedelta(minutes=10)):
+            return flask.Response(
+                'Invalid scheduled time',
+                400)
+
         timezone = pytz.timezone('US/Eastern')
         aware = timezone.localize(dt)
         td = (
