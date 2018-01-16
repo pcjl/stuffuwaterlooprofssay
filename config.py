@@ -15,4 +15,4 @@ BOTTOM_OFFSET = 150
 LINE_SPACING = 30
 
 BACKGROUND = 'background.jpg'
-FONT = 'Papyrus.ttf'
+FONT = 'font.ttf'
