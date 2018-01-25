@@ -160,7 +160,7 @@ def index():
 
     data = {
         'access_token': app.config['ACCESS_TOKEN'],
-        'message': caption,
+        'message': professor + ', ' + course + '\n' + caption,
         'published': not scheduled,
     }
 
