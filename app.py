@@ -83,11 +83,11 @@ def index():
     if flask.request.method == 'GET':
         return flask.render_template('index.html')
 
-    quote = flask.request.form.get('quote')
-    professor = flask.request.form.get('prof')
+    quote = flask.request.form.get('quote').strip()
+    professor = flask.request.form.get('prof').strip()
     is_professor = 'isprof' in flask.request.form
-    course = flask.request.form.get('course')
-    caption = flask.request.form.get('caption')
+    course = flask.request.form.get('course').strip()
+    caption = flask.request.form.get('caption').strip()
 
     date_time = flask.request.form.get('datetime')
     scheduled = date_time != ''
