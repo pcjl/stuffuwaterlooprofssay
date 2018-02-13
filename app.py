@@ -180,7 +180,7 @@ def index():
             200)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+# @app.route('/register', methods=['GET', 'POST'])
 def register():
     if flask.request.method == 'GET':
         return flask.render_template('register.html')
