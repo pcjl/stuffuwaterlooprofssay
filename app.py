@@ -27,7 +27,8 @@ class User(db.Model, flask_login.UserMixin):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(120))
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, **kwargs):
+        super(User, self).__init__(**kwargs)
         self.username = username
         self.password = password
 
@@ -177,3 +178,21 @@ def index():
     return flask.Response(
             response.text,
             200)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if flask.request.method == 'GET':
+        return flask.render_template('register.html')
+
+    username = flask.request.form['username']
+    password = flask.request.form.get('password')
+
+    user = User(
+        username=username,
+        password=passlib.hash.pbkdf2_sha256.hash(password))
+    db.session.add(user)
+    db.session.commit()
+
+    flask_login.login_user(user)
+    return flask.redirect(flask.url_for('index'))
