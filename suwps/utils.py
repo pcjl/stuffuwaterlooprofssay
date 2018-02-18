@@ -11,18 +11,19 @@ from suwps import app
 
 def convert_time(date_time):
     pattern = '%m/%d/%Y %I:%M %p'
-    dt = datetime.datetime.strptime(date_time, pattern)
+    date_time = datetime.datetime.strptime(date_time, pattern)
 
     timezone = pytz.timezone('US/Eastern')
-    aware = timezone.localize(dt)
+    aware = timezone.localize(date_time)
 
     if aware - datetime.datetime.now(timezone) <= datetime.timedelta(
             minutes=10):
         return False
 
-    td = (
+    timestamp = (
         aware - datetime.datetime(1970, 1, 1, tzinfo=pytz.utc)).total_seconds()
-    return int(td)
+
+    return int(timestamp)
 
 
 def generate_image(quote, professor, is_professor, course):

@@ -17,44 +17,6 @@ from suwps import app, db, utils
 from suwps.models import User
 
 
-@app.route('/login', methods=['GET'])
-def get_login():
-    if current_user.is_authenticated:
-        return redirect(url_for('get_index'))
-
-    return render_template('login.html')
-
-
-@app.route('/login', methods=['POST'])
-def post_login():
-    username = request.form.get('username', '').lower()
-    password = request.form.get('password', '')
-    rememberme = 'rememberme' in request.form
-
-    if not username or not password:
-        return Response(
-            'No username or password supplied.',
-            400)
-
-    user = User.query.filter_by(username=username).first()
-
-    if user is not None and user.verify_password(password):
-        login_user(user, remember=rememberme)
-        return Response(
-            'Login successful.',
-            200)
-
-    return Response(
-            'Invalid credentials supplied.',
-            401)
-
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('get_login'))
-
-
 @app.route('/', methods=['GET'])
 @login_required
 def get_index():
@@ -96,8 +58,48 @@ def post_index():
             200)
 
 
+@app.route('/login', methods=['GET'])
+def get_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('get_index'))
+
+    return render_template('login.html')
+
+
+@app.route('/login', methods=['POST'])
+def post_login():
+    username = request.form.get('username', '').lower()
+    password = request.form.get('password', '')
+    rememberme = 'rememberme' in request.form
+
+    if not username or not password:
+        return Response(
+            'No username or password supplied.',
+            400)
+
+    user = User.query.filter_by(username=username).first()
+
+    if user is not None and user.verify_password(password):
+        login_user(user, remember=rememberme)
+        return Response(
+            'Login successful.',
+            200)
+
+    return Response(
+            'Invalid credentials supplied.',
+            401)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('get_login'))
+
+
 @app.route('/register', methods=['GET'])
 def get_register():
+    if current_user.is_authenticated or not app.config['ENABLE_REGISTRATION']:
+        return redirect(url_for('get_index'))
     return render_template('register.html')
 
 
