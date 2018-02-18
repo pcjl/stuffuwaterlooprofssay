@@ -109,7 +109,7 @@ def index():
     paragraph = textwrap.wrap(quote, width=max_chars)
 
     extra_lines = (max(0, len(paragraph) - 6) + 1) // 2
-    quote_size = 60 - 6 * extra_lines
+    quote_size = 72 - 6 * extra_lines
     if extra_lines:
         max_chars += 6 * extra_lines
         paragraph = textwrap.wrap(quote, width=max_chars)
