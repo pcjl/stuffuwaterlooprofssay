@@ -27,11 +27,6 @@ class User(db.Model, flask_login.UserMixin):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(120))
 
-    def __init__(self, username, password, **kwargs):
-        super(User, self).__init__(**kwargs)
-        self.username = username
-        self.password = password
-
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
