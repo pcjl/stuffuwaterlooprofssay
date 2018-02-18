@@ -2,6 +2,7 @@ import datetime
 import io
 import textwrap
 
+import pytz
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
@@ -12,10 +13,15 @@ def convert_time(date_time):
     pattern = '%m/%d/%Y %I:%M %p'
     dt = datetime.datetime.strptime(date_time, pattern)
 
-    if dt - datetime.datetime.now() <= datetime.timedelta(minutes=10):
+    timezone = pytz.timezone('US/Eastern')
+    aware = timezone.localize(dt)
+
+    if aware - datetime.datetime.now(timezone) <= datetime.timedelta(
+            minutes=10):
         return False
 
-    td = (dt - datetime.datetime(1970, 1, 1)).total_seconds()
+    td = (
+        aware - datetime.datetime(1970, 1, 1, tzinfo=pytz.utc)).total_seconds()
     return int(td)
 
 
