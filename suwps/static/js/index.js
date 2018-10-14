@@ -4,7 +4,8 @@ jQuery(function($) {
 
         var form = $('form');
         var submitButton = $('button[type=submit]');
-        submitButton.button('loading');
+        submitButton.addClass('disabled');
+        submitButton.prop('disabled', true);
 
         $.ajax({
             url: form.attr('url'),
@@ -16,7 +17,8 @@ jQuery(function($) {
                     actionTextColor: "#FFEB3B",
                 });
 
-                submitButton.button('reset');
+                submitButton.removeClass('disabled');
+                submitButton.prop('disabled', false);
             },
             success: function(data, textStatus, jqXHR) {
                 Snackbar.show( {
@@ -30,18 +32,15 @@ jQuery(function($) {
                     }
                 );
 
-                submitButton.button('reset');
+                submitButton.removeClass('disabled');
+                submitButton.prop('disabled', false);
             },
         });
 
         return false;
     });
 
-    $('#datetime').datetimepicker({
-        showClear: true,
-        showClose: true,
-        focusOnShow: false,
-    });
+    $('#datetimepicker').datetimepicker();
 
     $('.btn-default').click(function() {
         $('textarea').val("");

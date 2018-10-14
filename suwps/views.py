@@ -49,7 +49,8 @@ def post_index():
             'Required fields were not filled out.',
             400)
 
-    scheduled_publish_time = utils.convert_time(date_time)
+    scheduled_publish_time = utils.convert_time(date_time) \
+        if date_time else None
 
     image = utils.generate_image(
         quote=quote,
