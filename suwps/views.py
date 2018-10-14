@@ -22,7 +22,7 @@ from suwps.models import User
 @app.before_request
 def redirect_custom_url():
     url_parts = urlparse(request.url)
-    if 'herokuapp' in url_parts.netloc and app.config.CUSTOM_URL:
+    if 'herokuapp' in url_parts.netloc and app.config['CUSTOM_URL']:
         url_parts_list = list(url_parts)
         url_parts_list[1] = app.config.CUSTOM_URL
         return redirect(urlunparse(url_parts_list), code=301)
