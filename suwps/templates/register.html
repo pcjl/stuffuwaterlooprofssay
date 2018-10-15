@@ -24,23 +24,27 @@
         </script>
     </head>
     <body>
-        <div class="container">
-            <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="/">Stuff Uwaterloo Profs Say</a>
-                </div>
+        <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="/">Stuff Uwaterloo Profs Say</a>
             </div>
+        </div>
 
+        <div class="container">
             <form method="post" action="/register">
                 <fieldset>
-                    <div class="form-group" name="username">
-                        <label for="username">Username</label>
-                        <input type="text" required class="form-control" name="username" placeholder="Username" />
+                    <div class="form-group row" name="username">
+                        <label class="col-sm-12" for="username">Username</label>
+                        <div class="col-sm-12">
+                            <input type="text" required class="form-control" name="username" placeholder="Username" />
+                        </div>
                     </div>
 
-                    <div class="form-group" name="password">
-                        <label class="control-label" for="password">Password</label>
-                        <input type="password" required class="form-control" name="password" placeholder="Password" />
+                    <div class="form-group row" name="password">
+                        <label class="col-sm-12" for="password">Password</label>
+                        <div class="col-sm-12">
+                            <input type="password" required class="form-control" name="password" placeholder="Password" />
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Register</button>
