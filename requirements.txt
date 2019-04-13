@@ -8,7 +8,7 @@ Flask-SSLify==0.1.5
 gunicorn==19.7.1
 idna==2.6
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.10.1
 MarkupSafe==1.0
 passlib==1.7.1
 Pillow==5.0.0
